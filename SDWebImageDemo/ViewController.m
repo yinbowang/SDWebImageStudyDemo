@@ -9,8 +9,9 @@
 #import "ViewController.h"
 #import <SDWebImage/UIImage+GIF.h>
 #import <SDWebImageFLPlugin/SDWebImageFLPlugin.h>
-#import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/UIImage+Transform.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+
 
 @interface ViewController ()
 
@@ -23,9 +24,23 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    [self testUIImageTransform];
+    [self testUIImageViewWebCache];
     
    
+    
+}
+
+- (void)testUIImageViewWebCache{
+    
+    UIImageView *imageView = [[UIImageView alloc]init];
+    imageView.backgroundColor = [UIColor greenColor];
+    imageView.frame = CGRectMake(0, 0, 200, 200);
+    imageView.center = self.view.center;
+    [self.view addSubview:imageView];
+    
+    [imageView sd_setImageWithURL:[NSURL URLWithString:@"http://pic33.nipic.com/20131007/13639685_123501617185_2.jpg"] placeholderImage:[UIImage imageNamed:@"placeHolder.jpeg"]];
+    
+    
     
 }
 
@@ -120,20 +135,6 @@
     
 }
 
-
-- (void)testUIImageViewWebCache{
-
-    UIImageView *imageView = [[UIImageView alloc]init];
-    imageView.backgroundColor = [UIColor greenColor];
-    imageView.frame = CGRectMake(0, 0, 200, 200);
-    imageView.center = self.view.center;
-    [self.view addSubview:imageView];
-    
-    [imageView sd_setImageWithURL:[NSURL URLWithString:@"http://pic33.nipic.com/20131007/13639685_123501617185_2.jpg"] placeholderImage:[UIImage imageNamed:@"placeHolder.jpeg"]];
-    
-    
-    
-}
 
 - (void)testSDWebImageFLPlugin{
     FLAnimatedImageView *animatedImageView = [[FLAnimatedImageView alloc] initWithFrame:self.view.frame];
