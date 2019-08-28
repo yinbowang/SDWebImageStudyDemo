@@ -52,7 +52,12 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
                      setImageBlock:(nullable SDSetImageBlock)setImageBlock
                           progress:(nullable SDImageLoaderProgressBlock)progressBlock
                          completed:(nullable SDInternalCompletionBlock)completedBlock {
+    
+    //获取SDWebImageContext上下文，这东西是个字典
+    //typedef NSDictionary<SDWebImageContextOption, id> SDWebImageContext;
+    //copy to avoid mutable object 如果传过来的是可变字典，那么把它变为不可变字典
     context = [context copy]; // copy to avoid mutable object
+    //去字典里找
     NSString *validOperationKey = context[SDWebImageContextSetImageOperationKey];
     if (!validOperationKey) {
         validOperationKey = NSStringFromClass([self class]);
