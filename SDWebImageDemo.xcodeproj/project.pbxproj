@@ -16,6 +16,7 @@
 		111BFCE4230A5136000E787B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 111BFCE3230A5136000E787B /* main.m */; };
 		111BFCEE230A5136000E787B /* SDWebImageDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 111BFCED230A5136000E787B /* SDWebImageDemoTests.m */; };
 		111BFCF9230A5136000E787B /* SDWebImageDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 111BFCF8230A5136000E787B /* SDWebImageDemoUITests.m */; };
+		11320FD4231656FD00AD2A8B /* dog.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 11320FD3231656FD00AD2A8B /* dog.jpg */; };
 		11ED17C4230FD69600925E24 /* timg.gif in Resources */ = {isa = PBXBuildFile; fileRef = 11ED17C3230FD69500925E24 /* timg.gif */; };
 		2044A9DEABF3638B90BA4E73 /* libPods-SDWebImageDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F6708263799E1D14C216F52 /* libPods-SDWebImageDemo.a */; };
 /* End PBXBuildFile section */
@@ -55,6 +56,7 @@
 		111BFCF4230A5136000E787B /* SDWebImageDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SDWebImageDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		111BFCF8230A5136000E787B /* SDWebImageDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDWebImageDemoUITests.m; sourceTree = "<group>"; };
 		111BFCFA230A5136000E787B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		11320FD3231656FD00AD2A8B /* dog.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = dog.jpg; sourceTree = "<group>"; };
 		11ED17C3230FD69500925E24 /* timg.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = timg.gif; sourceTree = "<group>"; };
 		4F6708263799E1D14C216F52 /* libPods-SDWebImageDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SDWebImageDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C714A9E411C589E447994CF /* Pods-SDWebImageDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDWebImageDemo.debug.xcconfig"; path = "Target Support Files/Pods-SDWebImageDemo/Pods-SDWebImageDemo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				111BFCD5230A5134000E787B /* AppDelegate.m */,
 				111BFCD7230A5134000E787B /* ViewController.h */,
 				111BFCD8230A5134000E787B /* ViewController.m */,
+				11320FD3231656FD00AD2A8B /* dog.jpg */,
 				110D859523153053005C1D9C /* placeHolder.jpeg */,
 				11ED17C3230FD69500925E24 /* timg.gif */,
 				111BFCDA230A5134000E787B /* Main.storyboard */,
@@ -266,6 +269,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11320FD4231656FD00AD2A8B /* dog.jpg in Resources */,
 				111BFCE1230A5136000E787B /* LaunchScreen.storyboard in Resources */,
 				11ED17C4230FD69600925E24 /* timg.gif in Resources */,
 				110D859623153053005C1D9C /* placeHolder.jpeg in Resources */,

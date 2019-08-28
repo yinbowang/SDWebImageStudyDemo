@@ -7,8 +7,10 @@
 //
 
 #import "ViewController.h"
-#import <SDWebImage/SDWebImage.h>
+#import <SDWebImage/UIImage+GIF.h>
 #import <SDWebImageFLPlugin/SDWebImageFLPlugin.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <SDWebImage/UIImage+Transform.h>
 
 @interface ViewController ()
 
@@ -21,16 +23,18 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    [self test3];
-   
+    [self testUIImageTransform];
     
    
     
 }
 
-- (void)test3{
+- (void)testUIImageTransform{
     
-    
+}
+
+- (void)testUIImageViewWebCache{
+
     UIImageView *imageView = [[UIImageView alloc]init];
     imageView.backgroundColor = [UIColor greenColor];
     imageView.frame = CGRectMake(0, 0, 200, 200);
@@ -43,14 +47,15 @@
     
 }
 
-- (void)test2{
+- (void)testSDWebImageFLPlugin{
     FLAnimatedImageView *animatedImageView = [[FLAnimatedImageView alloc] initWithFrame:self.view.frame];
     animatedImageView.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:animatedImageView];
     [animatedImageView sd_setImageWithURL:[NSURL URLWithString:@"https://raw.githubusercontent.com/liyong03/YLGIFImage/master/YLGIFImageDemo/YLGIFImageDemo/joy.gif"]];
 }
 
-- (void)test1{
+- (void)testUIImageGIF{
+    
     UIImageView *imageView = [[UIImageView alloc]init];
     imageView.backgroundColor = [UIColor greenColor];
     imageView.frame = CGRectMake(0, 0, 200, 200);
