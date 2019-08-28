@@ -57,15 +57,24 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
     //typedef NSDictionary<SDWebImageContextOption, id> SDWebImageContext;
     //copy to avoid mutable object 如果传过来的是可变字典，那么把它变为不可变字典
     context = [context copy]; // copy to avoid mutable object
-    //去字典里找
+    
+    //去字典里找setImageOperationKey为key的value值validOperationKey
     NSString *validOperationKey = context[SDWebImageContextSetImageOperationKey];
+    
+    //没找到就把当前的类的名字作为validOperationKey
     if (!validOperationKey) {
         validOperationKey = NSStringFromClass([self class]);
     }
-    self.sd_latestOperationKey = validOperationKey;
-    [self sd_cancelImageLoadOperationWithKey:validOperationKey];
-    self.sd_imageURL = url;
     
+    //把最新的操作值ImageOperationKey保存起来
+    self.sd_latestOperationKey = validOperationKey;
+    
+    //取消当前的Operation下载任务
+    [self sd_cancelImageLoadOperationWithKey:validOperationKey];
+    
+    //将sd_imageURL属性保存起来
+    self.sd_imageURL = url;
+  //如果options是SDWebImageDelayPlaceholder的话就不会进入if块，不会给imageView设置占位图， SDWebImageDelayPlaceholder枚举值的含义是取消网络图片加载好前展示占位图片
     if (!(options & SDWebImageDelayPlaceholder)) {
         dispatch_main_async_safe(^{
             [self sd_setImage:placeholder imageData:nil basedOnClassOrViaCustomSetImageBlock:setImageBlock cacheType:SDImageCacheTypeNone imageURL:url];
@@ -73,6 +82,8 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
     }
     
     if (url) {
+        
+        //imageView.sd_imageProgress = [[NSProgress alloc]initWithParent:nil userInfo:nil];如果不自己设置sd_imageProgress的话，拿到的imageProgress为nil,如果设置了的话，会把总进度和已经下载完成的进度给置为0
         // reset the progress
         NSProgress *imageProgress = objc_getAssociatedObject(self, @selector(sd_imageProgress));
         if (imageProgress) {
@@ -82,10 +93,13 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
         
 #if SD_UIKIT || SD_MAC
         // check and start image indicator
+        //imageView.sd_imageIndicator = [SDWebImageActivityIndicator grayLargeIndicator];如果自己设置了sd_imageIndicator指示器的话，会让指示器开始动画startAnimating，如果没有设置的话直接return
         [self sd_startImageIndicator];
+        //获取指示器对象
         id<SDWebImageIndicator> imageIndicator = self.sd_imageIndicator;
 #endif
         
+        //从context中获取customManager自定义管理制度，如果有就用自己的，如果没有就用SDWebImageManager
         SDWebImageManager *manager = context[SDWebImageContextCustomManager];
         if (!manager) {
             manager = [SDWebImageManager sharedManager];

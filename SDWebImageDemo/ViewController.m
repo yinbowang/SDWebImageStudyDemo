@@ -36,11 +36,30 @@
     
     UIImageView *imageView = [[UIImageView alloc]init];
     imageView.backgroundColor = [UIColor greenColor];
-    imageView.frame = CGRectMake(0, 0, 200, 200);
-    imageView.center = self.view.center;
+    imageView.frame = self.view.bounds;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:imageView];
     
-    [imageView sd_setImageWithURL:[NSURL URLWithString:@"http://pic33.nipic.com/20131007/13639685_123501617185_2.jpg"] placeholderImage:[UIImage imageNamed:@"placeHolder.jpeg"]];
+    imageView.sd_imageProgress = [[NSProgress alloc]initWithParent:nil userInfo:nil];
+    imageView.sd_imageIndicator = [SDWebImageActivityIndicator grayLargeIndicator];
+    imageView.sd_imageIndicator = [SDWebImageProgressIndicator defaultIndicator];
+    imageView.sd_imageTransition = [SDWebImageTransition curlUpTransition];
+    
+    NSString *url1 = @"http://img4.cache.netease.com/photo/0001/2010-04-17/64EFS71V05RQ0001.jpg";
+    NSString *url2 = @"https://raw.githubusercontent.com/liyong03/YLGIFImage/master/YLGIFImageDemo/YLGIFImageDemo/joy.gif";
+    
+    [imageView sd_setImageWithURL:[NSURL URLWithString:url1] placeholderImage:[UIImage imageNamed:@"placeHolder.jpeg"] options:SDWebImageRefreshCached context:nil progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+        
+        NSLog(@"receivedSize%ld,expectedSize%ld",(long)receivedSize,(long)expectedSize);
+        
+        
+    } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+       
+        NSLog(@"image%@,error%@,cacheType%ld",image,error,(long)cacheType);
+        
+    }];
+    
+
     
 }
 
