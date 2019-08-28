@@ -32,6 +32,8 @@
 
 - (void)testUIImageViewWebCache{
     
+    //https://sdwebimage.github.io/Categories/UIImageView(WebCache).html
+    
     UIImageView *imageView = [[UIImageView alloc]init];
     imageView.backgroundColor = [UIColor greenColor];
     imageView.frame = CGRectMake(0, 0, 200, 200);
@@ -39,8 +41,6 @@
     [self.view addSubview:imageView];
     
     [imageView sd_setImageWithURL:[NSURL URLWithString:@"http://pic33.nipic.com/20131007/13639685_123501617185_2.jpg"] placeholderImage:[UIImage imageNamed:@"placeHolder.jpeg"]];
-    
-    
     
 }
 
