@@ -99,18 +99,22 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
         id<SDWebImageIndicator> imageIndicator = self.sd_imageIndicator;
 #endif
         
-        //从context中获取customManager自定义管理制度，如果有就用自己的，如果没有就用SDWebImageManager
+    
+        //从context中获取customManager自定义管理者，如果有就用自己的，如果没有就用SDWebImageManager
         SDWebImageManager *manager = context[SDWebImageContextCustomManager];
         if (!manager) {
             manager = [SDWebImageManager sharedManager];
         }
         
+        //这里创建一个下载进度的block，到时候给SDWebImageManager用
         SDImageLoaderProgressBlock combinedProgressBlock = ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+            //如果外面传入了sd_imageProgress，那么就给imageProgress赋值，receivedSize接收到数据，expectedSize总数据，targetURL当前下载的url
             if (imageProgress) {
                 imageProgress.totalUnitCount = expectedSize;
                 imageProgress.completedUnitCount = receivedSize;
             }
 #if SD_UIKIT || SD_MAC
+            //如果指示器实现了updateIndicatorProgress:这个更新进度的方法，那么就去调用更新进度条的进度，sd自带指示器SDWebImageActivityIndicator和SDWebImageProgressIndicator，其中SDWebImageProgressIndicator进度条指示器实现了updateIndicatorProgress方法，菊花指示器没有实现，所以这个是给进度条用的
             if ([imageIndicator respondsToSelector:@selector(updateIndicatorProgress:)]) {
                 double progress = 0;
                 if (expectedSize != 0) {
@@ -122,15 +126,23 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
                 });
             }
 #endif
+            //这个block是用户外面传进来的，如果实现了progressBlock那么直接回调给用户，用户可以在控制台查看进度
             if (progressBlock) {
                 progressBlock(receivedSize, expectedSize, targetURL);
             }
         };
+        
+        
+        //用manager来生成一个operation任务
         @weakify(self);
         id <SDWebImageOperation> operation = [manager loadImageWithURL:url options:options context:context progress:combinedProgressBlock completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             @strongify(self);
+            //如果self在block执行的时候释放了，那么直接return
             if (!self) { return; }
+            
             // if the progress not been updated, mark it to complete state
+            //如果发现最后任务完成了imageProgress的totalUnitCount和completedUnitCount还是0，那么就给imageProgress的totalUnitCount和completedUnitCount赋值为SDWebImageProgressUnitCountUnknown也就是1
+            //const int64_t SDWebImageProgressUnitCountUnknown = 1LL; （LL是 long long 类型的缩写）
             if (imageProgress && finished && !error && imageProgress.totalUnitCount == 0 && imageProgress.completedUnitCount == 0) {
                 imageProgress.totalUnitCount = SDWebImageProgressUnitCountUnknown;
                 imageProgress.completedUnitCount = SDWebImageProgressUnitCountUnknown;
@@ -138,6 +150,7 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
             
 #if SD_UIKIT || SD_MAC
             // check and stop image indicator
+            //如果finished为yes那么停止指示器动画
             if (finished) {
                 [self sd_stopImageIndicator];
             }
@@ -192,11 +205,19 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
                 callCompletedBlockClojure();
             });
         }];
+        
+        
+        //把用manager生成的任务加入到字典中
         [self sd_setImageLoadOperation:operation forKey:validOperationKey];
+        
+        
     } else {
+        
+        //这种情况是如果url为空的时候，停止指示器动画
 #if SD_UIKIT || SD_MAC
         [self sd_stopImageIndicator];
 #endif
+        //在主线程回调用户传进来的completedBlock，直接返回一个NSError对象
         dispatch_main_async_safe(^{
             if (completedBlock) {
                 NSError *error = [NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorInvalidURL userInfo:@{NSLocalizedDescriptionKey : @"Image url is nil"}];
