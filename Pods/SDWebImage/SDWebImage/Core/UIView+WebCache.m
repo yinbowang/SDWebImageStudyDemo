@@ -156,19 +156,25 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
             }
 #endif
             
+        //finished为yes或者使options是SDWebImageAvoidAutoSetImage的话shouldCallCompletedBlock为yes
             BOOL shouldCallCompletedBlock = finished || (options & SDWebImageAvoidAutoSetImage);
+            
+        //如果有image并且options是SDWebImageAvoidAutoSet那么ImageshouldNotSetImage为yes
+        //或者如果没有image并且options不是SDWebImageDelayPlaceholder那么ImageshouldNotSetImage为yes
             BOOL shouldNotSetImage = ((image && (options & SDWebImageAvoidAutoSetImage)) ||
                                       (!image && !(options & SDWebImageDelayPlaceholder)));
             
-            
+            //这里又定义了一个回调的block
             SDWebImageNoParamsBlock callCompletedBlockClojure = ^{
                 if (!self) { return; }
+                //若果shouldNotSetImage为yes的话不刷新UI
                 if (!shouldNotSetImage) {
                 //标记为需要重新布局，异步调用layoutIfNeeded刷新布局，不立即刷新，在下一轮runloop结束前刷新，对于这一轮runloop之内的所有布局和UI上的更新只会刷新一次，layoutSubviews一定会被调用。
                     //https://www.jianshu.com/p/d46bcc656e04
                     //需要设置图片到imageview上
                     [self sd_setNeedsLayout];
                 }
+                //回调用户的block
                 if (completedBlock && shouldCallCompletedBlock) {
                     completedBlock(image, data, error, cacheType, finished, url);
                 }
@@ -203,10 +209,12 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
 #endif
             dispatch_main_async_safe(^{
 #if SD_UIKIT || SD_MAC
+                //这里是给imageview设置targetImage
                 [self sd_setImage:targetImage imageData:targetData basedOnClassOrViaCustomSetImageBlock:setImageBlock transition:transition cacheType:cacheType imageURL:imageURL];
 #else
                 [self sd_setImage:targetImage imageData:targetData basedOnClassOrViaCustomSetImageBlock:setImageBlock cacheType:cacheType imageURL:imageURL];
 #endif
+                //最后回调block
                 callCompletedBlockClojure();
             });
         }];
