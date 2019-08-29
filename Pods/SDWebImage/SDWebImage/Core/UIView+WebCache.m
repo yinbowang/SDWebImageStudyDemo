@@ -159,9 +159,14 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
             BOOL shouldCallCompletedBlock = finished || (options & SDWebImageAvoidAutoSetImage);
             BOOL shouldNotSetImage = ((image && (options & SDWebImageAvoidAutoSetImage)) ||
                                       (!image && !(options & SDWebImageDelayPlaceholder)));
+            
+            
             SDWebImageNoParamsBlock callCompletedBlockClojure = ^{
                 if (!self) { return; }
                 if (!shouldNotSetImage) {
+                //标记为需要重新布局，异步调用layoutIfNeeded刷新布局，不立即刷新，在下一轮runloop结束前刷新，对于这一轮runloop之内的所有布局和UI上的更新只会刷新一次，layoutSubviews一定会被调用。
+                    //https://www.jianshu.com/p/d46bcc656e04
+                    //需要设置图片到imageview上
                     [self sd_setNeedsLayout];
                 }
                 if (completedBlock && shouldCallCompletedBlock) {
